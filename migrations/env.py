@@ -1,13 +1,15 @@
 # noqa: E401
 from alembic import context
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base
 
+from src.models import Base
 from src.settings import get_settings
+
 
 config = context.config
 
-Base = declarative_base()
+from src.models.user import UserModel  # noqa
+
 
 def include_object(object, name, type_, reflected, compare_to):
     if type_ == "column" and object.info.get("skip_autogenerate", False):

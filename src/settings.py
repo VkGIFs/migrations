@@ -1,3 +1,8 @@
+# pylint: disable=E0213
+# disabled E0213 because Method 'assemble_postgres_db_url' should have "self" as first argument (no-self-argument)
+# but if replace `cls` with `self` raise PydanticUserError
+# pydantic.errors.PydanticUserError: `@field_validator` cannot be applied to instance methods
+
 from functools import lru_cache
 from typing import Any
 
@@ -21,6 +26,7 @@ class Settings(BaseSettings):
 
     @field_validator("DATABASE_URL", mode="before")  # type: ignore
     def assemble_postgres_db_url(cls, v: str | None, values: Any) -> str:
+        """Auto assembling postgres db url function"""
         if v and isinstance(v, str):
             return v
         return (
@@ -33,4 +39,5 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()
+    """Cached settings function"""
+    return Settings()  # type: ignore
